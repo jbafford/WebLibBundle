@@ -27,18 +27,24 @@ class WebLibCommand extends ContainerAwareCommand
         
         $baseDir = dirname($container->getParameter('kernel.root_dir'));
         
-        $vendorDir = $baseDir . '/vendor/';
-        $webDir = $baseDir . '/' . $config['libdir'] . '/';
+        $vendorDir = 'vendor/';
+        $libDir = $config['libdir'] . '/';
         
-        if(!file_exists($webDir))
-            mkdir($webDir, 0755, true);
+        $vendorPath = $baseDir . '/' . $vendorDir;
+        $libPath = $baseDir . '/' . $libDir;
+        
+        if(!file_exists($libPath))
+            mkdir($libPath, 0755, true);
         
         foreach($config['contents'] as $src => $dest)
         {
-            $src = $vendorDir . $src;
-            $dest = $webDir . $dest;
+            $dispSrc = $vendorDir . $src;
+            $dispDest = $libDir . $dest;
             
-            $output->writeln("link $src => $dest");
+            $output->writeln("link $dispSrc => $dispDest");
+            
+            $src = $vendorPath . $src;
+            $dest = $libPath . $dest;
             
             if(file_exists($dest))
                 @unlink($dest);
