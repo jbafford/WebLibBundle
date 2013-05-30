@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             	->scalarNode('libdir')->isRequired()->cannotBeEmpty()->end()
+            	->booleanNode('symlink')->defaultTrue()->end()
             	->arrayNode('contents')->isRequired()->requiresAtLeastOneElement()->prototype('scalar')->end()
             ->end()
         ;
