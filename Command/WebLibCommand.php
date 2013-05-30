@@ -22,6 +22,7 @@ class WebLibCommand extends ContainerAwareCommand
     protected function installComponents(OutputInterface $output)
     {
         $container = $this->getContainer();
+        $filesystem = $container->get('filesystem');
         
         $config = $container->getParameter('bafford_web_lib.config');
         
@@ -33,8 +34,8 @@ class WebLibCommand extends ContainerAwareCommand
         $vendorPath = $baseDir . '/' . $vendorDir;
         $libPath = $baseDir . '/' . $libDir;
         
-        if(!file_exists($libPath))
-            mkdir($libPath, 0755, true);
+        if(!$filesystem->exists($libPath))
+            $filesystem->mkdir($libPath, 0755);
         
         foreach($config['contents'] as $src => $dest)
         {
@@ -46,10 +47,10 @@ class WebLibCommand extends ContainerAwareCommand
             $src = $vendorPath . $src;
             $dest = $libPath . $dest;
             
-            if(file_exists($dest))
-                @unlink($dest);
+            if($filesystem->exists($dest))
+                $filesystem->remove($dest);
             
-            symlink($src, $dest);
+            $filesystem->symlink($src, $dest);
         }
     }
     
