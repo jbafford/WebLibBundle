@@ -15,7 +15,8 @@ class WebLibCommand extends ContainerAwareCommand
         $this
             ->setName('bafford:weblib:install')
             ->setDescription('Create the web library directory based on configuration')
-            ->addOption('symlink', null, InputOption::VALUE_NONE, 'Use symlinks (overrides configuration; =no to disable symlinks)')
+            ->addOption('symlink', null, InputOption::VALUE_NONE, 'Use symlinks (overrides configuration)')
+            ->addOption('no-symlink', null, InputOption::VALUE_NONE, 'Do not use symlinks (overrides configuration)')
         ;
     }
     
@@ -26,11 +27,11 @@ class WebLibCommand extends ContainerAwareCommand
         
         $config = $container->getParameter('bafford_web_lib.config');
         
-        $cmdSym = $input->getOption('symlink');
-        if($cmdSym === false)
-            $symlink = $config['symlink'];
-        else
-            $symlink = ($input->getOption('symlink') !== 'no');
+        $symlink = $config['symlink'];
+        if($input->getOption('symlink') !== false)
+            $symlink = true;
+        else if($input->getOption('no-symlink') !== false)
+            $symlink = false;
         
         $action = ($symlink ? 'link' : 'copy');
         
