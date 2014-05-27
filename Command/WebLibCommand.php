@@ -35,7 +35,7 @@ class WebLibCommand extends ContainerAwareCommand
         
         $action = ($symlink ? 'link' : 'copy');
         
-        $baseDir = dirname($container->getParameter('kernel.root_dir'));
+        $baseDir = realpath($container->getParameter('kernel.root_dir') . '/..');
         
         $vendorDir = 'vendor/';
         $libDir = $config['libdir'] . '/';
