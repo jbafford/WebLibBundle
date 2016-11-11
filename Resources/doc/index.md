@@ -1,7 +1,7 @@
 WebLibBundle
 =============================
 
-WebLibBundle bundle provides a simple way to copy or symlink locations in vendor into a web-accessible directory. This is useful when you need to use a javascript or css library that is not otherwise wrapped with a bundle.
+WebLibBundle bundle provides a simple way to copy or symlink files or directories into a web-accessible directory. This is useful when you need to use a javascript or css library that is not otherwise wrapped with a bundle.
 
 ##Installation
 
@@ -12,7 +12,7 @@ Add the following in your composer.json:
 ``` json
 {
     "require": {
-        "jbafford/web-lib-bundle": "dev-master"
+        "jbafford/web-lib-bundle": "~1.0"
     }
 }
 ```
@@ -20,7 +20,7 @@ Add the following in your composer.json:
 Or,
 
 ``` bash
-./composer.phar require jbafford/web-lib-bundle dev-master
+./composer.phar require jbafford/web-lib-bundle ~1.0
 ```
 
 ### Initialize the bundle
@@ -38,20 +38,27 @@ public function registerBundles()
 )
 ```
 
-### Symfony2 configuration
+### Symfony configuration
 
 Add the following configuration to your ``config.yml``:
 
 ``` yaml
 bafford_web_lib:
-    libdir: web/lib
+    target_dir: "web/lib"
     symlink: true
     contents:
-        "path-in-vendor": "path-in-libdir"
-        ...
+        -
+            source: "path in source directory"
+            destination: "path in target_dir"
+            files: [ optional list of files names to copy ]
 ```
 
-The ``contents`` key is an array of paths within the vendor directory mapped to target destinations in the specified ``libdir``.
+* ``target_dir`` is a path relative to your project root that serves as a base path for copied content
+* ``symlink``, when ``true``, uses symlinks; when ``false``, files are copied
+* ``contents`` is an array of entries that describe what to copy to the ``target_dir``:
+	* ``source`` is a filesystem path relative to your project root
+	* ``destination`` is a filesystem path relative to ``target_dir``
+	* ``files`` is an optional array which contains a list of items in ``source`` to copy or symlink into ``destination``. If omitted, the entire ``source`` is copied or symlinked.
 
 
 ### Composer configuration
