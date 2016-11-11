@@ -11,8 +11,9 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-        "symfony/symfony": ">=2.1"
+        "php": ">=5.4",
+        "symfony/symfony": ">=2.5",
+        "sensio/distribution-bundle": ">=3.0"
     },
     "target-dir": "Bafford/WebLibBundle",
     "autoload": {

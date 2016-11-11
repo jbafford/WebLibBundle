@@ -11,15 +11,13 @@ class WebLibInstall extends \Sensio\Bundle\DistributionBundle\Composer\ScriptHan
     public static function installComponents(CommandEvent $event)
     {
         $options = self::getOptions($event);
-        $appDir = $options['symfony-app-dir'];
-
-        if (!is_dir($appDir)) {
-            echo 'The symfony-app-dir ('.$appDir.') specified in composer.json was not found in '.getcwd().'.'.PHP_EOL;
-
+        
+        $consoleDir = static::getConsoleDir($event, 'execute command');
+        if(!$consoleDir) {
             return;
         }
 
-        static::executeCommand($event, $appDir, 'bafford:weblib:install');
+        static::executeCommand($event, $consoleDir, 'bafford:weblib:install');
     }
     
     public static function postInstall(CommandEvent $event)
