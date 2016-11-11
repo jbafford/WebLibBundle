@@ -15,8 +15,7 @@
         "symfony/symfony": ">=2.5",
         "sensio/distribution-bundle": ">=3.0"
     },
-    "target-dir": "Bafford/WebLibBundle",
     "autoload": {
-        "psr-0": { "Bafford\\WebLibBundle": "" }
+        "psr-4": { "Bafford\\WebLibBundle\\": "" }
     }
 }
