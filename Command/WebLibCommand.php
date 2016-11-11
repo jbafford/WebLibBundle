@@ -35,13 +35,10 @@ class WebLibCommand extends ContainerAwareCommand
         
         $action = ($symlink ? 'link' : 'copy');
         
-        $baseDir = realpath($container->getParameter('kernel.root_dir') . '/..');
+        $basePath = realpath($container->getParameter('kernel.root_dir') . '/..') . '/';
         
-        $vendorDir = 'vendor/';
         $targetDir = $config['target_dir'] . '/';
-        
-        $vendorPath = $baseDir . '/' . $vendorDir;
-        $targetPath = $baseDir . '/' . $targetDir;
+        $targetPath = $basePath . $targetDir;
         
         if(!$filesystem->exists($targetPath))
             $filesystem->mkdir($targetPath, 0755);
@@ -52,12 +49,12 @@ class WebLibCommand extends ContainerAwareCommand
             $dest = $item['destination'];
             $files = $item['files'] ?? null;
             
-            $dispSrc = $vendorDir . $src;
+            $dispSrc = $src;
             $dispDest = $targetDir . $dest;
             
             $output->writeln("$action $dispSrc => $dispDest");
             
-            $src = $vendorPath . $src;
+            $src = $basePath . $src;
             $dest = $targetPath . $dest;
             
             if($filesystem->exists($dest))
