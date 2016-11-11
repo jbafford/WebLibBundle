@@ -38,28 +38,44 @@ class WebLibCommand extends ContainerAwareCommand
         $baseDir = realpath($container->getParameter('kernel.root_dir') . '/..');
         
         $vendorDir = 'vendor/';
-        $libDir = $config['libdir'] . '/';
+        $targetDir = $config['target_dir'] . '/';
         
         $vendorPath = $baseDir . '/' . $vendorDir;
-        $libPath = $baseDir . '/' . $libDir;
+        $targetPath = $baseDir . '/' . $targetDir;
         
-        if(!$filesystem->exists($libPath))
-            $filesystem->mkdir($libPath, 0755);
+        if(!$filesystem->exists($targetPath))
+            $filesystem->mkdir($targetPath, 0755);
         
-        foreach($config['contents'] as $src => $dest)
+        foreach($config['contents'] as $item)
         {
+            $src = $item['source'];
+            $dest = $item['destination'];
+            $files = $item['files'] ?? null;
+            
             $dispSrc = $vendorDir . $src;
-            $dispDest = $libDir . $dest;
+            $dispDest = $targetDir . $dest;
             
             $output->writeln("$action $dispSrc => $dispDest");
             
             $src = $vendorPath . $src;
-            $dest = $libPath . $dest;
+            $dest = $targetPath . $dest;
             
             if($filesystem->exists($dest))
                 $filesystem->remove($dest);
             
-            if($symlink)
+            if($files)
+            {
+                $filesystem->mkdir($dest, 0755);
+                
+                foreach($files as $file)
+                {
+                    if($symlink)
+                        $filesystem->symlink($src . '/' . $file, $dest . '/' . $file);
+                    else
+                        $filesystem->mirror($src . '/' . $file, $dest . '/' . $file);
+                }
+            }
+            else if($symlink)
                 $filesystem->symlink($src, $dest);
             else
                 $filesystem->mirror($src, $dest);

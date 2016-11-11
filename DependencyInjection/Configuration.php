@@ -22,9 +22,17 @@ class Configuration implements ConfigurationInterface
         
         $rootNode
             ->children()
-            	->scalarNode('libdir')->isRequired()->cannotBeEmpty()->end()
+            	->scalarNode('target_dir')->isRequired()->cannotBeEmpty()->end()
             	->booleanNode('symlink')->defaultTrue()->end()
-            	->arrayNode('contents')->isRequired()->requiresAtLeastOneElement()->prototype('scalar')->end()
+            	->arrayNode('contents')->isRequired()
+            	    ->prototype('array')
+            	        ->children()
+            	            ->scalarNode('source')->isRequired()->cannotBeEmpty()->end()
+            	            ->scalarNode('destination')->isRequired()->cannotBeEmpty()->end()
+            	            ->arrayNode('files')->prototype('scalar')->end()
+            	        ->end()
+            	    ->end()
+            	->end()
             ->end()
         ;
         
